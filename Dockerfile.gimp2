@@ -1,0 +1,10 @@
+# docker build . -t gimp -f Dockerfile.gimp2
+# docker run --rm -t -p 5900:5900 gimp
+FROM ubuntu:20.04
+RUN apt-get update && apt-get install -y --no-install-recommends gimp x11vnc xvfb
+RUN	mkdir ~/.vnc
+RUN	x11vnc -storepasswd 1234 ~/.vnc/passwd
+ENV DISPLAY=:0
+COPY startx11vnc.gimp.sh /startx11vnc.gimp.sh
+EXPOSE 5900
+CMD ["/startx11vnc.gimp.sh"]
