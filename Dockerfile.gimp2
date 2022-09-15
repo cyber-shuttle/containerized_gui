@@ -7,4 +7,4 @@ RUN	x11vnc -storepasswd 1234 ~/.vnc/passwd
 ENV DISPLAY=:0
 COPY startx11vnc.gimp.sh /startx11vnc.gimp.sh
 EXPOSE 5900
-CMD ["/startx11vnc.gimp.sh"]
+ENTRYPOINT ["/startx11vnc.gimp.sh"]
