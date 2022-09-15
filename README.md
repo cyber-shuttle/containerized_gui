@@ -17,3 +17,9 @@ https://jlesage.github.io/docker-apps/
 ## Difference between Guacamole and NoVNC
 
 https://sourceforge.net/p/guacamole/discussion/1110834/thread/00b95bb2/#9355
+
+## Strace
+
+```
+strace -p PID -Tf -e trace=openat -A -o /tmp/strace.log
+```
