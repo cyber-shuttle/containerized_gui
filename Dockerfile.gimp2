@@ -1,12 +1,13 @@
 # docker build . -t gimp -f Dockerfile.gimp2
 # docker run --rm -t -p 5900:5900 -v $PWD/data:/data --cap-add=SYS_PTRACE gimp /data/space-shuttle.svg
 FROM ubuntu:20.04
-RUN apt-get update && apt-get install -y --no-install-recommends gimp x11vnc xvfb
-RUN apt-get install -y strace
+RUN apt-get update && apt-get install -y --no-install-recommends strace x11vnc xvfb python3
+RUN apt-get install -y --no-install-recommends gimp
 RUN	mkdir ~/.vnc
 RUN	x11vnc -storepasswd 1234 ~/.vnc/passwd
 ENV DISPLAY=:0
 COPY startx11vnc.gimp.sh /startx11vnc.gimp.sh
 COPY start_strace.sh /start_strace.sh
+COPY parse_strace.py /parse_strace.py
 EXPOSE 5900
 ENTRYPOINT ["/startx11vnc.gimp.sh"]

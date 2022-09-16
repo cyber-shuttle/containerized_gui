@@ -2,8 +2,7 @@
 
 export DISPLAY=:0
 Xvfb "$DISPLAY" -screen 0 1024x768x24 &
-gimp "$@" &
+gimp "$@" >& /dev/null &
 echo $! > /tmp/gui.pid
-/start_strace.sh &
-echo $! > /tmp/strace.pid
-exec /usr/bin/x11vnc -display "$DISPLAY" -usepw -forever
+/usr/bin/x11vnc -display "$DISPLAY" -usepw -forever -bg >& /dev/null
+exec /start_strace.sh
