@@ -7,5 +7,6 @@ RUN	mkdir ~/.vnc
 RUN	x11vnc -storepasswd 1234 ~/.vnc/passwd
 ENV DISPLAY=:0
 COPY startx11vnc.gimp.sh /startx11vnc.gimp.sh
+COPY start_strace.sh /start_strace.sh
 EXPOSE 5900
 ENTRYPOINT ["/startx11vnc.gimp.sh"]
