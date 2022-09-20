@@ -1,7 +1,9 @@
 #!/usr/bin/env python
 
+import json
 import os
 import shutil
+import socket
 import subprocess
 import sys
 from tempfile import tempdir
@@ -40,6 +42,13 @@ if __name__ == "__main__":
             stdout=subprocess.PIPE,
             stderr=subprocess.STDOUT,
         )
+
+        # This doesn't work, probably executes too soon?
+        # docker_container_id = (
+        #     subprocess.check_output(["docker", "ps", "-l", "--quiet"]).decode().strip()
+        # )
+        # print(f"{docker_container_id=}")
+
         # Start a VNC viewer, pointed at container
         novnc_proc = subprocess.Popen(
             [
@@ -59,5 +68,20 @@ if __name__ == "__main__":
         # Wait for container to exit
         docker_proc.wait()
         novnc_proc.terminate()
-        # TODO: Retrieve output file from container
+        # Parse stdout and get output file paths
+        container_output = docker_proc.stdout.read().decode()
+        print(f"{container_output=}")
+        container_output_dict = json.loads(container_output)
+        output_file_paths = container_output_dict["output-files"]
+        docker_container_id = container_output_dict["container-id"]
+        print(f"{output_file_paths=}")
+        # Retrieve output file from container
+        subprocess.check_call(
+            [
+                "docker",
+                "cp",
+                f"{docker_container_id}:{output_file_paths[0]}",
+                "./output",
+            ]
+        )
         # TODO: Remove docker container

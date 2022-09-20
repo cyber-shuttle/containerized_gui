@@ -3,6 +3,7 @@
 import fileinput
 import json
 import re
+import socket
 
 # Only consider files that are written
 syscall_line = re.compile(r"\d+\s+open\w*\(\w+, \"([^\"]+)\".*(O_WRONLY|O_RDWR)")
@@ -25,4 +26,12 @@ def get_output_files(log_file):
 if __name__ == "__main__":
     output_file_paths = get_output_files(fileinput.input())
 
-    print(json.dumps({"output-files": list(output_file_paths)}))
+    print(
+        json.dumps(
+            {
+                "output-files": list(output_file_paths),
+                # Get docker container id (https://stackoverflow.com/a/577710160)
+                "container-id": socket.gethostname(),
+            }
+        )
+    )
