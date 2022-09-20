@@ -58,8 +58,6 @@ if __name__ == "__main__":
             print(line)
         # Wait for container to exit
         docker_proc.wait()
-        novnc_proc.kill()
-        print(docker_proc.stdout.read().decode())
-        # TODO: Parse stdout and get output file paths
+        novnc_proc.terminate()
         # TODO: Retrieve output file from container
         # TODO: Remove docker container
