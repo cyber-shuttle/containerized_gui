@@ -78,7 +78,7 @@ if __name__ == "__main__":
         for output_file_path in output_file_paths:
             # Retrieve output file from container
             print(f"copying {os.path.basename(output_file_path)} to ./output")
-            subprocess.check_call(
+            subprocess.run(
                 [
                     "docker",
                     "cp",
@@ -86,4 +86,5 @@ if __name__ == "__main__":
                     "./output",
                 ]
             )
-        # TODO: Remove docker container
+        # Remove docker container
+        subprocess.run(["docker", "rm", docker_container_id], capture_output=True)
