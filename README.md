@@ -23,3 +23,10 @@ https://sourceforge.net/p/guacamole/discussion/1110834/thread/00b95bb2/#9355
 ```
 strace -p PID -Tf -e trace=openat -A -o /tmp/strace.log
 ```
+
+## noVNC
+
+```
+cd noVNC-1.3.0/utils
+./novnc_proxy --vnc localhost:5900
+```
