@@ -2,7 +2,7 @@
 
 import sys
 
-from decorator import run_gui
+from containerized_gui.decorator import run_gui
 
 if __name__ == "__main__":
 

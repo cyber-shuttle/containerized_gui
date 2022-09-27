@@ -3,3 +3,4 @@ venv
 strace.log
 noVNC-*/
 *.pyc
+.ipynb_checkpoints
