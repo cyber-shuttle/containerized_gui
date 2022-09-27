@@ -30,3 +30,10 @@ strace -p PID -Tf -e trace=openat -A -o /tmp/strace.log
 cd noVNC-1.3.0/utils
 ./novnc_proxy --vnc localhost:5900
 ```
+
+## JupyterLab and VNC integration
+
+- https://discourse.jupyter.org/t/jupyterhub-gui-applications/6714/3
+- https://pypi.org/project/jupyterlab-novnc/
+- https://github.com/SwissDataScienceCenter/renku-vnc
+- https://github.com/jupyterhub/jupyter-remote-desktop-proxy
