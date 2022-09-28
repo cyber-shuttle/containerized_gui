@@ -1,3 +1,39 @@
+# Containerized GUI Experiments
+
+## Getting Started
+
+First, clone the repository. Then perform the following steps inside the repo.
+
+### Build 'gimp' image
+
+```
+docker build . -t gimp -f Dockerfile.gimp2
+```
+
+### noVNC install
+
+```
+curl -OL https://github.com/novnc/noVNC/archive/refs/tags/v1.3.0.tar.gz
+tar zxf v1.3.0.tar.gz
+```
+
+### Python virtual environment
+
+```
+python3 -m venv venv
+source ./venv/bin/activate
+pip install -U pip wheel
+pip install -r requirements.txt
+```
+
+### Start JupyterLab
+
+```
+jupyter-lab svg2png.ipynb
+```
+
+## Containerized GUIs
+
 https://github.com/jlesage/docker-firefox
 
     docker run -d --name=firefox -p 5800:5800 -p 5900:5900 -e VNC_PASSWORD=1234 --shm-size 2g jlesage/firefox
