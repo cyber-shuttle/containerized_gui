@@ -1,14 +1,17 @@
 #!/usr/bin/env python
+from contextlib import redirect_stdout
 import functools
+import io
 import json
 import os
 import shutil
 import subprocess
 import tempfile
+import threading
 import webbrowser
 
 
-def run_gui(input_file, image_name):
+def run_gui(input_file, image_name, vnc_url_handler=None):
     # Create a data directory and copy input file into it
     with tempfile.TemporaryDirectory() as data_volume:
         filename = os.path.basename(input_file)
@@ -55,8 +58,11 @@ def run_gui(input_file, image_name):
             # print(line)
             if line.strip().startswith("http"):
                 novnc_url = line.strip() + "&autoconnect=1&password=1234"
-                print(f"opening browser tab for {novnc_url}")
-                webbrowser.open(novnc_url)
+                if vnc_url_handler is not None:
+                    vnc_url_handler(novnc_url)
+                else:
+                    print(f"opening browser tab for {novnc_url}")
+                    webbrowser.open(novnc_url)
                 break
         # Wait for container to exit
         docker_proc.wait()
@@ -90,20 +96,34 @@ def ui(name=None, **kwargs):
     def decorator(func):
         @functools.wraps(func)
         def wrapper(input_file, *args, **kwargs):
-            output_files = run_gui(input_file, name)
-            func(output_files)
+
+            # create output widget
+            import ipywidgets as widgets
+            from IPython.display import IFrame
+
+            out = widgets.Output(layout={"border": "1px solid black"})
+
+            # create vnc url handler, write iframe to output widget
+            def vnc_url_handler(vnc_url):
+                # TODO: make VNC iframe height/width configurable, here and in GUI container
+                out.append_display_data(IFrame(vnc_url, 1024, 768))
+
+            def run_gui_thread(input_file):
+                output_files = run_gui(
+                    input_file, name, vnc_url_handler=vnc_url_handler
+                )
+                # Capture any output from wrapped function and write to output widget
+                with redirect_stdout(io.StringIO()) as stdout:
+                    func(output_files)
+                # Clear output widget (closes VNC iframe)
+                # (See https://github.com/jupyter-widgets/ipywidgets/issues/3260#issuecomment-907715980 for this workaround)
+                out.outputs = ()
+                out.append_stdout(stdout.getvalue())
+
+            thread = threading.Thread(target=run_gui_thread, args=(input_file,))
+            thread.start()
+            return out
 
         return wrapper
 
     return decorator
-
-
-if __name__ == "__main__":
-
-    @ui(name="gimp")
-    def svg2png(output_files):
-        print(f"{output_files=}")
-        # TODO: do something with the output_files?
-        return output_files
-
-    output_files = svg2png("./data/space-shuttle.svg")
