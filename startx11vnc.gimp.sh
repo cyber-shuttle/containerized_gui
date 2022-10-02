@@ -1,5 +1,6 @@
 #!/bin/bash
 
+unzip /opt/ARCHIVE.zip -d /inputs
 export DISPLAY=:0
 Xvfb "$DISPLAY" -screen 0 1024x768x24 &
 gimp "$@" >& /dev/null &
