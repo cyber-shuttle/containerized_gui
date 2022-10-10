@@ -2,6 +2,7 @@
 
 import fileinput
 import json
+import os
 import re
 import socket
 
@@ -18,8 +19,11 @@ def get_output_files(log_file):
         m = syscall_line.match(line)
         if m:
             file_path = m.group(1)
-            if not file_exclusions.match(file_path):
-                output_file_paths.add(file_path)
+            if file_exclusions.match(file_path):
+                continue
+            if not os.path.exists(file_path):
+                continue
+            output_file_paths.add(file_path)
     return output_file_paths
 
 
