@@ -1,5 +1,10 @@
 FROM ubuntu:20.04
-RUN apt-get update && apt-get install -y --no-install-recommends strace x11vnc xvfb python3
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    openbox \
+    python3 \
+    strace \
+    x11vnc \
+    xvfb
 RUN	mkdir ~/.vnc
 RUN	x11vnc -storepasswd 1234 ~/.vnc/passwd
 ENV DISPLAY=:0

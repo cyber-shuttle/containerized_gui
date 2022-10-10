@@ -4,16 +4,10 @@
 
 First, clone the repository. Then perform the following steps inside the repo.
 
-### Build 'base' image
+### Build images
 
 ```
-docker build -t gui-base dockerfiles/base/
-```
-
-### Build 'gimp' image
-
-```
-docker build -t gimp dockerfiles/gimp/
+./build_images.sh
 ```
 
 ### noVNC install
