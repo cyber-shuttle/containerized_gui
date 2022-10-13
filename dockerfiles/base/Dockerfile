@@ -9,7 +9,6 @@ RUN	mkdir ~/.vnc
 RUN	x11vnc -storepasswd 1234 ~/.vnc/passwd
 ENV DISPLAY=:0
 COPY init.sh /init.sh
-COPY start_strace.sh /start_strace.sh
 COPY parse_strace.py /parse_strace.py
 EXPOSE 5900
 ENTRYPOINT ["/init.sh"]
