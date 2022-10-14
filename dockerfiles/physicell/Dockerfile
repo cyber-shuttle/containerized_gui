@@ -32,4 +32,7 @@ RUN tar zxf v2.8.6.tar.gz
 # startgui.sh assumes that this is the working directory
 WORKDIR /app/PhysiCell-model-builder-2.8.6
 
+# Size the virtual framebuffer to match the app
+ENV DISPLAY_WIDTH=1100
+ENV DISPLAY_HEIGHT=770
 COPY startgui.sh /startgui.sh

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-Xvfb "$DISPLAY" -screen 0 1024x768x24 &
+Xvfb "$DISPLAY" -screen 0 ${DISPLAY_WIDTH}x${DISPLAY_HEIGHT}x24 &
 openbox >& /tmp/openbox.log &
 exec /startgui.sh "$@" >& /tmp/gui.log &
 GUI_PID="$!"
