@@ -1,3 +1,3 @@
 #!/bin/sh
 
-exec python3 ./bin/pmb.py --config "$@"
+exec python3 ./bin/pmb.py --studio --config "$@"
