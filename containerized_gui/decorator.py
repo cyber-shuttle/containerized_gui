@@ -92,7 +92,7 @@ def run_gui(input_file, image_name, vnc_url_handler=None):
         return result
 
 
-def ui(name=None, **kwargs):
+def ui(name=None, width=1024, height=768, **kwargs):
     def decorator(func):
         @functools.wraps(func)
         def wrapper(input_file, *args, **kwargs):
@@ -105,8 +105,7 @@ def ui(name=None, **kwargs):
 
             # create vnc url handler, write iframe to output widget
             def vnc_url_handler(vnc_url):
-                # TODO: make VNC iframe height/width configurable, here and in GUI container
-                out.append_display_data(IFrame(vnc_url, 1024, 768))
+                out.append_display_data(IFrame(vnc_url, width, height))
 
             def run_gui_thread(input_file):
                 output_files = run_gui(
