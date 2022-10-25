@@ -73,20 +73,29 @@ def run_gui(input_file, image_name, vnc_url_handler=None):
         container_output_dict = json.loads(container_output)
         output_file_paths = container_output_dict["output-files"]
         docker_container_id = container_output_dict["container-id"]
+        working_dir = container_output_dict["working-dir"]
         result = []
         for output_file_path in output_file_paths:
             # Retrieve output file from container
             output_filename = os.path.basename(output_file_path)
+            # Some paths are relative to the container working directory
+            full_output_file_path = (
+                output_file_path
+                if os.path.isabs(output_file_path)
+                else os.path.join(working_dir, output_file_path)
+            )
             print(f"copying {output_filename} to ./output")
-            subprocess.run(
+            copy_result = subprocess.run(
                 [
                     "docker",
                     "cp",
-                    f"{docker_container_id}:{output_file_path}",
+                    f"{docker_container_id}:{full_output_file_path}",
                     "./output",
                 ]
             )
-            result.append(os.path.join(".", "output", output_filename))
+            # verify that copy succeeds
+            if copy_result.returncode == 0:
+                result.append(os.path.join(".", "output", output_filename))
         # Remove docker container
         subprocess.run(["docker", "rm", docker_container_id], capture_output=True)
         return result

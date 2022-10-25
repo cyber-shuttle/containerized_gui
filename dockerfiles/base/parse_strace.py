@@ -56,6 +56,7 @@ if __name__ == "__main__":
                     "output-files": list(output_file_paths),
                     # Get docker container id (https://stackoverflow.com/a/577710160)
                     "container-id": socket.gethostname(),
+                    "working-dir": os.getcwd(),
                     "exit-code": exit_code,
                 }
             )
