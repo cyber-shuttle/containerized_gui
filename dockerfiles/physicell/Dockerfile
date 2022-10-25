@@ -1,6 +1,6 @@
 FROM gui-base
 
-RUN apt-get install -y \
+RUN apt-get update && apt-get install -y \
     curl \
     g++ \
     make \
@@ -12,6 +12,8 @@ RUN apt-get install -y \
     python3-scipy
 
 RUN mkdir /app
+
+ENV PYTHONDONTWRITEBYTECODE=1
 
 # Build Physicell
 WORKDIR /app
