@@ -20,11 +20,18 @@ WORKDIR /app
 RUN curl -OL https://github.com/MathCancer/PhysiCell/archive/refs/tags/1.10.4.tar.gz
 RUN tar zxf 1.10.4.tar.gz
 WORKDIR /app/PhysiCell-1.10.4
+
 # Build the 'template' project and copy the project executable to /usr/local/bin
 RUN make template
 COPY build_physicell.sh .
 RUN ./build_physicell.sh
 RUN cp project /usr/local/bin/
+
+# Build the 'biorobots' project and copy the executable to /usr/local/bin
+RUN make reset
+RUN make biorobots-sample
+RUN ./build_physicell.sh
+RUN cp biorobots /usr/local/bin/
 
 # Download Physicell Model Builder
 WORKDIR /app
