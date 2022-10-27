@@ -33,7 +33,7 @@ def GUIContainer(
     output_files_handler=None,
 ):
     out = widgets.Output(layout={"border": "1px solid black"})
-    out.output_files = List(trait=Unicode())
+    out.add_traits(output_files=List(trait=Unicode()))
     out.shutdown = MethodType(shutdown, out)
 
     # create vnc url handler, write iframe to output widget
