@@ -11,6 +11,8 @@ import threading
 from uuid import uuid4
 import webbrowser
 
+FILE_ARG = object()
+
 
 class ContainerizedGUIThread(threading.Thread):
     def __init__(
@@ -20,6 +22,7 @@ class ContainerizedGUIThread(threading.Thread):
         *args,
         vnc_url_handler=None,
         output_files_list=None,
+        run_args=[FILE_ARG],
         **kwargs,
     ):
         super().__init__(*args, **kwargs)
@@ -31,6 +34,7 @@ class ContainerizedGUIThread(threading.Thread):
         else:
             self.output_files = []
         self.kill_event = threading.Event()
+        self.run_args = run_args
 
     def run(self) -> None:
         print("inside run")
@@ -38,6 +42,13 @@ class ContainerizedGUIThread(threading.Thread):
         with tempfile.TemporaryDirectory() as data_volume:
             filename = os.path.basename(self.input_file)
             shutil.copy(self.input_file, os.path.join(data_volume, filename))
+
+            run_args = list(
+                map(
+                    lambda a: f"/data/{filename}" if a is FILE_ARG else a, self.run_args
+                )
+            )
+            print(f"{run_args=}")
 
             docker_container_name = str(uuid4())
             docker_proc = subprocess.Popen(
@@ -53,7 +64,7 @@ class ContainerizedGUIThread(threading.Thread):
                     "--name",
                     docker_container_name,
                     self.image_name,
-                    f"/data/{filename}",
+                    *run_args,
                 ],
                 stdout=subprocess.PIPE,
                 stderr=subprocess.STDOUT,

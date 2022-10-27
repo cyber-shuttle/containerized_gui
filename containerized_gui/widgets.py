@@ -7,7 +7,7 @@ import ipywidgets as widgets
 from IPython.display import IFrame
 from traitlets import List, Unicode
 
-from containerized_gui.decorator import ContainerizedGUIThread, run_gui
+from containerized_gui.decorator import ContainerizedGUIThread, run_gui, FILE_ARG
 
 FILE = object()
 
@@ -53,10 +53,12 @@ def GUIContainer(
     #     out.append_stdout(stdout.getvalue())
 
     # thread = threading.Thread(target=run_gui_thread, args=(input_file,))
+    run_args = list(map(lambda a: FILE_ARG if a is FILE else a, args))
     out.thread = ContainerizedGUIThread(
         input_file,
         image_name,
         vnc_url_handler=vnc_url_handler,
+        run_args=run_args,
     )
     out.thread.start()
     print("thread started")
